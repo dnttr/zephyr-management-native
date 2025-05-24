@@ -1,10 +1,26 @@
 cmake_minimum_required(VERSION 3.31)
 project(zephyr-management)
 
+include(${CMAKE_SOURCE_DIR}/tools/Dependencies.cmake)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    app.cpp)
+    library.cpp)
 
-add_executable(zephyr_management "src/${SOURCES}")
+add_library(${PROJECT_NAME} SHARED "src/${SOURCES}")
+
+prepare_dependencies()
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        OUTPUT_NAME "zm"
+        VERSION 1.0.0
+        SOVERSION 1
+        INSTALL_RPATH "@loader_path"
+)
+
+
+
