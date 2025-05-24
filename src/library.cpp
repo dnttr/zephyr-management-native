@@ -5,7 +5,7 @@
 #include <iostream>
 #include <jni.h>
 
-int JNI_onload(JavaVM *vm, void *reserved) {
+jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     //dlopen czy cos?
     std::cout << "XD" << std::endl;
     return JNI_VERSION_21;

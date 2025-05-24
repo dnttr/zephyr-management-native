@@ -24,7 +24,29 @@ function(prepare_dependencies)
         message(FATAL_ERROR "JNI OS specific header not found.")
     endif ()
 
-    target_include_directories(${PROJECT_NAME} PUBLIC ${JNI_INCLUDE_DIRS} ${JNI_INCLUDE_OS_SPECIFIC} )
+    set(LIBSODIUM "${PROJECT_SOURCE_DIR}/external/libsodium.dylib")
+    if (NOT EXISTS "${LIBSODIUM}")
+        message(FATAL_ERROR "libsodium not found at ${LIBSODIUM}. Please ensure it is built and available.")
+    endif ()
 
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${JNI_LIBRARIES})
+    set(LIBZE "${PROJECT_SOURCE_DIR}/external/libze.dylib")
+    if (NOT EXISTS "${LIBZE}")
+        message(FATAL_ERROR "libze not found at ${LIBZE}. Please ensure it is built and available.")
+    endif ()
+
+    set(LIBZNB "${PROJECT_SOURCE_DIR}/external/libznb.dylib")
+    if (NOT EXISTS "${LIBZNB}")
+        message(FATAL_ERROR "libznb not found at ${LIBZNB}. Please ensure it is built and available.")
+    endif ()
+
+    set(LIB_LINK
+        ${LIBSODIUM}
+        ${LIBZE}
+        ${LIBZNB}
+    )
+
+    set(LIB_INCLUDE "${PROJECT_SOURCE_DIR}/external/include")
+
+    target_include_directories(${PROJECT_NAME} PUBLIC ${JNI_INCLUDE_DIRS} ${JNI_INCLUDE_OS_SPECIFIC} ${LIB_INCLUDE})
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${JNI_LIBRARIES} ${LIB_LINK})
 endfunction()
