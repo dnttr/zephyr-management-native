@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    library.cpp)
+    loader.cpp)
 
-add_library(${PROJECT_NAME} SHARED "src/${SOURCES}")
+add_executable(${PROJECT_NAME} "src/${SOURCES}")
 
 prepare_dependencies()
 target_include_directories(${PROJECT_NAME} PUBLIC include)
