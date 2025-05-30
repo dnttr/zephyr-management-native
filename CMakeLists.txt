@@ -7,9 +7,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    loader.cpp)
+        ${CMAKE_SOURCE_DIR}/src/loader.cpp
+        ${CMAKE_SOURCE_DIR}/src/bindings.cpp)
 
-add_executable(${PROJECT_NAME} "src/${SOURCES}")
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 prepare_dependencies()
 target_include_directories(${PROJECT_NAME} PUBLIC include)
