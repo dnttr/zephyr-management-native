@@ -7,8 +7,8 @@
 #include <iostream>
 #include <map>
 
+#include <ZNBKit/vm_management.hpp>
 #include "bindings.hpp"
-#include "ZNBKit/vm_management.hpp"
 
 int main(const int argc, char *argv[])
 {
@@ -77,10 +77,13 @@ int main(const int argc, char *argv[])
         {"ffi_ze_nonce", znb_kit::reference(&bindings::ffi_ze_nonce, {"long", "int"})}
     };
 
-    const znb_kit::klass_signature klass_signature(
+    const znb_kit::klass_signature bindings_klass(
         jni_env, "org/dnttr/zephyr/management/Bindings");
 
-    jvmti.try_mapping_methods(klass_signature.get_owner(), jvm_methods_map);
+    //TODO: refactor this to use klass_signature directly. Needs a refactor of jvmti_factory.
+    jvmti.try_mapping_methods(bindings_klass.get_owner(), jvm_methods_map);
+
+    //const znb_kit::klass_signature entry_klass(jni_env, "org/dnttr/zephyr/management/Entry");
 
     return 0;
 }
