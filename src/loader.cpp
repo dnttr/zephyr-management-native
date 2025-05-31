@@ -5,7 +5,9 @@
 #include "loader.hpp"
 
 #include <iostream>
+#include <map>
 
+#include "bindings.hpp"
 #include "ZNBKit/vm_management.hpp"
 
 int main(const int argc, char *argv[])
@@ -48,7 +50,37 @@ int main(const int argc, char *argv[])
         return 1;
     }
 
-    znb_kit::jvmti_object jvmti_object(vm->get_jvmti()->get().get_owner());
+    auto jni_env = vm->get_env();
+    auto jvmti_env = vm->get_jvmti()->get().get_owner();
+
+    znb_kit::jvmti_object jvmti(jni_env, jvmti_env);
+
+    const std::unordered_multimap<std::string, znb_kit::reference> jvm_methods_map = {
+        {"ffi_zm_open_session", znb_kit::reference(&bindings::ffi_zm_open_session, {"long[]"})},
+        {"ffi_zm_close_session", znb_kit::reference(&bindings::ffi_zm_close_session, {"long"})},
+        {
+            "ffi_ze_encrypt_symmetric",
+            znb_kit::reference(&bindings::ffi_ze_encrypt_symmetric, {"long", "byte[]", "byte[]", "byte[]"})
+        },
+        {
+            "ffi_ze_decrypt_symmetric",
+            znb_kit::reference(&bindings::ffi_ze_decrypt_symmetric, {"long", "byte[]", "byte[]", "byte[]"})
+        },
+        {
+            "ffi_ze_encrypt_asymmetric",
+            znb_kit::reference(&bindings::ffi_ze_encrypt_asymmetric, {"long", "byte[]", "byte[]"})
+        },
+        {
+            "ffi_ze_decrypt_asymmetric",
+            znb_kit::reference(&bindings::ffi_ze_decrypt_asymmetric, {"long", "byte[]", "byte[]"})
+        },
+        {"ffi_ze_nonce", znb_kit::reference(&bindings::ffi_ze_nonce, {"long", "int"})}
+    };
+
+    const znb_kit::klass_signature klass_signature(
+        jni_env, "org/dnttr/zephyr/management/Bindings");
+
+    jvmti.try_mapping_methods(klass_signature.get_owner(), jvm_methods_map);
 
     return 0;
 }
