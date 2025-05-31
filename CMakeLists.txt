@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(zephyr-management)
+project(zephyr-management-native)
 
 include(${CMAKE_SOURCE_DIR}/tools/Dependencies.cmake)
 
